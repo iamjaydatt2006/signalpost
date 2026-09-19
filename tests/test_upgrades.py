@@ -294,6 +294,36 @@ class SynthesisTests(unittest.TestCase):
         summary = synthesize_summary(profile, extract_claims(profile)["claims"])
         self.assertIn("0 employees", summary["summary"])
 
+    def test_structured_sections_are_verified_only_with_evidence(self):
+        profile = with_website(base_profile(), verified=True)
+        profile["evidence"]["financials"] = financials_record()
+        result = extract_claims(profile)
+        s = synthesize_summary(profile, result["claims"], evidence=result["evidence"])
+        self.assertIn("sections", s)
+        for key in ("COMPANY", "PEOPLE", "LOCATIONS", "FINANCIALS", "HIRING", "PUBLIC_ACTIVITY", "RECENT_CHANGES", "UNKNOWN", "SOURCES"):
+            self.assertIn(key, s["sections"])
+        # COMPANY facts must carry evidence ids.
+        for item in s["sections"]["COMPANY"]:
+            self.assertTrue(item["evidence_ids"])
+        # SOURCES lists the real consulted URLs.
+        self.assertTrue(s["sections"]["SOURCES"])
+
+    def test_unknown_section_lists_unavailable_fields(self):
+        profile = base_profile()
+        profile["evidence"]["financials"] = financials_record(status="not_found")
+        result = extract_claims(profile)
+        s = synthesize_summary(profile, result["claims"], evidence=result["evidence"])
+        self.assertIn("revenue", s["sections"]["UNKNOWN"])  # missing financials -> UNKNOWN, not zero
+
+    def test_recent_changes_section_reflects_changes(self):
+        profile = with_website(base_profile(), verified=True)
+        result = extract_claims(profile)
+        changes = [{"field": "registry.employees", "old_value": 5, "new_value": 12,
+                    "source_url": "https://data.brreg.no/x", "retrieved_at": "2026-09-01T00:00:00Z"}]
+        s = synthesize_summary(profile, result["claims"], changes=changes, evidence=result["evidence"])
+        self.assertEqual(len(s["sections"]["RECENT_CHANGES"]), 1)
+        self.assertEqual(s["sections"]["RECENT_CHANGES"][0]["field"], "registry.employees")
+
 
 # --------------------------------------------------------------------------- #
 # BUDGET

@@ -202,7 +202,7 @@ def terminal_envelope(
     if extracted["conflicts"]:
         envelope["conflicts"] = extracted["conflicts"]
     if include_summary:
-        envelope["synthesis"] = synthesize_summary(profile, claims)
+        envelope["synthesis"] = synthesize_summary(profile, claims, changes=changes, evidence=contract_evidence)
     return envelope
 
 

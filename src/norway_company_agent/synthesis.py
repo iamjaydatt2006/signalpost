@@ -38,10 +38,15 @@ def synthesize_summary(
     claims: list[dict[str, Any]],
     *,
     company_name: str | None = None,
+    changes: list[dict[str, Any]] | None = None,
+    evidence: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Return ``{"summary": str, "sentences": [{text, evidence_ids}], "fact_count": int}``.
+    """Return a factual summary plus structured, evidence-linked ``sections``.
 
     ``claims`` should be the OUTPUT_CONTRACT claims produced by ``claims.extract_claims``.
+    Every fact derives from an ``available`` claim; ``UNKNOWN`` lists explicitly
+    unavailable fields; ``RECENT CHANGES`` reflects detected refresh changes;
+    ``SOURCES`` lists the distinct source URLs actually consulted.
     """
     by_field = _by_field(claims)
     name = company_name or profile.get("name") or (by_field.get("legal_name") or {}).get("value") or "This entity"
@@ -124,9 +129,80 @@ def synthesize_summary(
             add(f"An independently verified external signal was recorded ({field.removeprefix('external_')}).", field)
 
     summary = " ".join(sentence["text"] for sentence in sentences)
+
+    # -- structured, verified-only sections (usability + synthesis) --------
+    def fact(field: str, label: str) -> dict[str, Any] | None:
+        claim = by_field.get(field)
+        if claim is None:
+            return None
+        return {"label": label, "value": claim.get("value"), "evidence_ids": claim.get("evidence_ids") or []}
+
+    def collect(*items) -> list[dict[str, Any]]:
+        return [f for f in items if f is not None]
+
+    people = by_field.get("role_holders")
+    people_list = []
+    if people is not None and isinstance(people.get("value"), list):
+        people_list = [{"name": p.get("name"), "role": p.get("role"), "evidence_ids": people.get("evidence_ids") or []}
+                       for p in people["value"] if p.get("name")]
+
+    hiring = [c for c in claims if c.get("field") == "external_job_posting" and c.get("availability") == "available"]
+    public_activity = [
+        {"field": c["field"], "value": c.get("value"), "evidence_ids": c.get("evidence_ids") or []}
+        for c in claims
+        if c.get("availability") == "available" and c["field"].startswith("external_") and c["field"] != "external_job_posting"
+    ]
+
+    unknown = sorted({
+        c["field"] for c in claims
+        if c.get("availability") in ("not_available", "blocked", "ambiguous", "failed")
+    })
+
+    source_urls = []
+    for record in (evidence or []):
+        url = record.get("source_url")
+        if url and url not in source_urls:
+            source_urls.append(url)
+
+    recent_changes = [
+        {"field": ch.get("field"), "old_value": ch.get("old_value"), "new_value": ch.get("new_value"),
+         "source_url": ch.get("source_url"), "retrieved_at": ch.get("retrieved_at")}
+        for ch in (changes or [])
+    ]
+
+    sections = {
+        "COMPANY": collect(
+            fact("legal_name", "Legal name"),
+            fact("legal_form", "Legal form"),
+            fact("industry_label", "Industry"),
+            fact("registration_status", "Status"),
+            fact("registered_employees", "Employees"),
+            fact("verified_website", "Verified website"),
+        ),
+        "PEOPLE": people_list,
+        "LOCATIONS": collect(
+            fact("municipality", "Municipality"),
+            fact("registered_subunit_count", "Registered subunits"),
+        ),
+        "FINANCIALS": collect(
+            fact("revenue", "Revenue"),
+            fact("operating_result", "Operating result"),
+            fact("annual_result", "Annual result"),
+            fact("total_assets", "Total assets"),
+            fact("equity", "Equity"),
+            fact("debt", "Debt"),
+        ),
+        "HIRING": [{"value": c.get("value"), "evidence_ids": c.get("evidence_ids") or []} for c in hiring],
+        "PUBLIC_ACTIVITY": public_activity,
+        "RECENT_CHANGES": recent_changes,
+        "UNKNOWN": unknown,
+        "SOURCES": source_urls,
+    }
+
     return {
         "summary": summary,
         "sentences": sentences,
         "fact_count": len(sentences),
-        "policy": "Every sentence is derived only from available, evidence-linked claims; unsupported statements are omitted.",
+        "sections": sections,
+        "policy": "Every fact derives only from available, evidence-linked claims; unavailable fields are listed under UNKNOWN, not guessed.",
     }
