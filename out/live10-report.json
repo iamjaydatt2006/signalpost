@@ -1,0 +1,93 @@
+{
+  "run_id": "live-validation-10b",
+  "started_at": "2026-09-19T07:56:20.054553Z",
+  "completed_at": "2026-09-19T07:56:20.058584Z",
+  "expected_count": 10,
+  "emitted_envelopes": 10,
+  "resumed_profiles": 10,
+  "profiles_fetched_this_run": 0,
+  "modules": [
+    "registry",
+    "accounting_obligation",
+    "registry_live",
+    "financials",
+    "roles",
+    "group",
+    "locations",
+    "website"
+  ],
+  "registry": {
+    "registry_snapshot_sha256": "7a224e9507458426d7c2cf92b3debcfd9f15469c841a4596b8016a445059b375",
+    "registry_rows_scanned": 10,
+    "requested": 10,
+    "selected": 10
+  },
+  "operations": {
+    "requests": 0,
+    "bytes": 0,
+    "p50_ms": null,
+    "p95_ms": null
+  },
+  "budget": {
+    "requests": 0,
+    "third_party_cost_usd": 0.0,
+    "executed_requests": 0,
+    "executed_cost_usd": 0.0,
+    "planned_requests": 0,
+    "planned_cost_usd": 0.0,
+    "runtime_ms": 10,
+    "failures": 0,
+    "blocked_sources": 0,
+    "successful_observations": 6,
+    "requests_by_connector": {},
+    "cost_by_connector": {},
+    "degraded": false,
+    "limits": {
+      "max_requests": 300,
+      "max_cost_usd": 2.0,
+      "max_runtime_seconds": 600.0,
+      "max_failures": null,
+      "headroom": 0.9
+    }
+  },
+  "change_detection": {
+    "previous_profiles_loaded": 0,
+    "total_changes": 0
+  },
+  "external_observations": {
+    "verified_published": 6,
+    "quarantined": 0
+  },
+  "enrichment_planning": {
+    "enabled": false,
+    "companies_planned": 0,
+    "scheduled_tasks": 0,
+    "skipped_tasks": 0
+  },
+  "enrichment_execution": {
+    "enabled": true,
+    "connectors_enabled": [
+      "company_site_activity",
+      "company_site_news"
+    ],
+    "connectors_disabled": [
+      "news_rss"
+    ],
+    "companies_executed": 10,
+    "verified_observations": 6,
+    "ambiguous_observations": 0,
+    "rejected_observations": 0,
+    "duplicates_merged": 0
+  },
+  "validation": {
+    "passed": true,
+    "checks": {
+      "exact_expected_count": true,
+      "unique_organisation_numbers": true,
+      "all_entity_states_terminal": true,
+      "all_module_states_terminal": true,
+      "zero_silent_drops": true
+    },
+    "invalid_states": []
+  }
+}

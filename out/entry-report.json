@@ -1,0 +1,95 @@
+{
+  "run_id": "submission-1000",
+  "started_at": "2026-09-19T08:16:28.585135Z",
+  "completed_at": "2026-09-19T08:25:16.481541Z",
+  "expected_count": 1000,
+  "emitted_envelopes": 1000,
+  "resumed_profiles": 0,
+  "profiles_fetched_this_run": 1000,
+  "modules": [
+    "registry",
+    "accounting_obligation",
+    "registry_live",
+    "financials",
+    "roles",
+    "group",
+    "locations",
+    "website"
+  ],
+  "registry": {
+    "registry_snapshot_sha256": "0a3c4c33f86ec7b39bd1c90207d7755f8c3947b7fbde5f1f59f5538cfd6da143",
+    "registry_rows_scanned": 1000,
+    "requested": 1000,
+    "selected": 1000
+  },
+  "operations": {
+    "requests": 5610,
+    "bytes": 65427337,
+    "p50_ms": 928,
+    "p95_ms": 1897
+  },
+  "budget": {
+    "requests": 5610,
+    "third_party_cost_usd": 0.0,
+    "executed_requests": 5610,
+    "executed_cost_usd": 0.0,
+    "planned_requests": 0,
+    "planned_cost_usd": 0.0,
+    "runtime_ms": 528677,
+    "failures": 0,
+    "blocked_sources": 0,
+    "successful_observations": 39,
+    "requests_by_connector": {
+      "official_brreg": 5610
+    },
+    "cost_by_connector": {},
+    "degraded": false,
+    "limits": {
+      "max_requests": 7000,
+      "max_cost_usd": 2.0,
+      "max_runtime_seconds": 3000.0,
+      "max_failures": null,
+      "headroom": 0.9
+    }
+  },
+  "change_detection": {
+    "previous_profiles_loaded": 0,
+    "total_changes": 0
+  },
+  "external_observations": {
+    "verified_published": 39,
+    "quarantined": 0
+  },
+  "enrichment_planning": {
+    "enabled": false,
+    "companies_planned": 0,
+    "scheduled_tasks": 0,
+    "skipped_tasks": 0
+  },
+  "enrichment_execution": {
+    "enabled": true,
+    "connectors_enabled": [
+      "company_site_activity",
+      "company_site_news"
+    ],
+    "connectors_disabled": [
+      "news_rss"
+    ],
+    "companies_executed": 1000,
+    "verified_observations": 39,
+    "ambiguous_observations": 0,
+    "rejected_observations": 0,
+    "duplicates_merged": 0
+  },
+  "validation": {
+    "passed": true,
+    "checks": {
+      "exact_expected_count": true,
+      "unique_organisation_numbers": true,
+      "all_entity_states_terminal": true,
+      "all_module_states_terminal": true,
+      "zero_silent_drops": true
+    },
+    "invalid_states": []
+  }
+}

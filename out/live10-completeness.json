@@ -1,0 +1,129 @@
+{
+  "scorer": "signalpost_all_source_completeness_v1",
+  "definition": "Per-company field completeness across official Norwegian records and verified external evidence. Missing fields earn zero; unavailable sentiment remains unavailable rather than neutral.",
+  "weights": {
+    "official_foundation": {
+      "official_identity": 5.0,
+      "annual_accounts": 10.0,
+      "roles": 5.0,
+      "locations": 5.0,
+      "website_terminal_state": 5.0
+    },
+    "external_enrichment": {
+      "exact_external_identity": 8.0,
+      "verified_handles": 8.0,
+      "profile_metrics": 8.0,
+      "places_identity": 4.0,
+      "places_reviews": 8.0,
+      "workforce_jobs": 8.0,
+      "public_buzz": 8.0,
+      "independent_sentiment": 12.0,
+      "freshness_evidence": 6.0
+    }
+  },
+  "base": {
+    "companies": 5,
+    "foundation_mean": 30.0,
+    "strict_completeness_mean": 38.8,
+    "experimental_completeness_mean": 38.8,
+    "strict_at_50": 2,
+    "experimental_at_65": 0,
+    "strict_distribution": {
+      "30.0": 3,
+      "52.0": 2
+    },
+    "component_coverage": {
+      "foundation": {
+        "official_identity": 1.0,
+        "annual_accounts": 1.0,
+        "roles": 1.0,
+        "locations": 1.0,
+        "website_terminal_state": 1.0
+      },
+      "strict_enrichment": {
+        "exact_external_identity": 0.4,
+        "verified_handles": 0.0,
+        "profile_metrics": 0.4,
+        "places_identity": 0.0,
+        "places_reviews": 0.0,
+        "workforce_jobs": 0.0,
+        "public_buzz": 0.0,
+        "independent_sentiment": 0.0,
+        "freshness_evidence": 0.4
+      }
+    }
+  },
+  "extension": {
+    "companies": 5,
+    "foundation_mean": 30.0,
+    "strict_completeness_mean": 44.8,
+    "experimental_completeness_mean": 44.8,
+    "strict_at_50": 3,
+    "experimental_at_65": 0,
+    "strict_distribution": {
+      "30.0": 2,
+      "52.0": 2,
+      "60.0": 1
+    },
+    "component_coverage": {
+      "foundation": {
+        "official_identity": 1.0,
+        "annual_accounts": 1.0,
+        "roles": 1.0,
+        "locations": 1.0,
+        "website_terminal_state": 1.0
+      },
+      "strict_enrichment": {
+        "exact_external_identity": 0.6,
+        "verified_handles": 0.0,
+        "profile_metrics": 0.6,
+        "places_identity": 0.0,
+        "places_reviews": 0.0,
+        "workforce_jobs": 0.0,
+        "public_buzz": 0.2,
+        "independent_sentiment": 0.0,
+        "freshness_evidence": 0.6
+      }
+    }
+  },
+  "combined": {
+    "companies": 10,
+    "foundation_mean": 30.0,
+    "strict_completeness_mean": 41.8,
+    "experimental_completeness_mean": 41.8,
+    "strict_at_50": 5,
+    "experimental_at_65": 0,
+    "strict_distribution": {
+      "30.0": 5,
+      "52.0": 4,
+      "60.0": 1
+    },
+    "component_coverage": {
+      "foundation": {
+        "official_identity": 1.0,
+        "annual_accounts": 1.0,
+        "roles": 1.0,
+        "locations": 1.0,
+        "website_terminal_state": 1.0
+      },
+      "strict_enrichment": {
+        "exact_external_identity": 0.5,
+        "verified_handles": 0.0,
+        "profile_metrics": 0.5,
+        "places_identity": 0.0,
+        "places_reviews": 0.0,
+        "workforce_jobs": 0.0,
+        "public_buzz": 0.1,
+        "independent_sentiment": 0.0,
+        "freshness_evidence": 0.5
+      }
+    }
+  },
+  "transfer": {
+    "strict_mean_delta": 6.0,
+    "experimental_mean_delta": 6.0,
+    "strict_retention": 1.1546,
+    "experimental_retention": 1.1546
+  },
+  "claim_boundary": "Completeness, not correctness. Strict evidence passes the current publication policy; experimental evidence is rights- or qualification-pending. Hidden exact-entity labels remain a separate accuracy gate."
+}
